@@ -6,6 +6,8 @@ const Engineer = require('./lib/Engineer');
 const { getMaxListeners } = require('process');
 const { inheritInnerComments } = require('@babel/types');
 const inquirer = require('inquirer');
+const fs = require("fs");
+
 
 
 
@@ -129,6 +131,7 @@ async function newEngineer(){
 }
 
 async function newIntern(){
+
     let questions = [ {
         type: 'input',
         message: "What is the Interns name?",
@@ -182,10 +185,81 @@ async function newIntern(){
 }
 
 function generateHTML(){
-    console.log(employeeList);
-}
 
+    const roles = [];
+    for(let i = 0; i< employeeList.length; i++){
+        roles.push(employeeList[i].constructor.name);
+    }
 
+    // for loop that generates html text based on the
+    // role of the employee
+    let rawHTML = ''
+    for(let i = 0; i < roles.length; i ++){
+        if(roles[i] == 'Manager'){
+          let html = `
+          <div>
+            <h2>${employeeList[i].name}</h2>
+            <h3>${roles[i]}</h3>
+            ID: ${employeeList[i].id}<br>
+            Email: <a href="${employeeList[i].email}">${employeeList[i].email}</a><br>
+            Office number: ${employeeList[i].officeNumber}
+           </div>`;
+           rawHTML += html;
+        }
+        if(roles[i] == 'Engineer'){
+            let html = `
+            <div>
+              <h2>${employeeList[i].name}</h2>
+              <h3>${roles[i]}</h3>
+              ID: ${employeeList[i].id}<br>
+              Email: <a href="${employeeList[i].email}">${employeeList[i].email}</a><br>
+              Github: <a href="https://www.github.com/${employeeList[i].gitHub}.com">${employeeList[i].gitHub}</a>
+             </div>`;
+             rawHTML += html;
+          }
+          if(roles[i] == 'Intern'){
+            let html = `
+            <div>
+              <h2>${employeeList[i].name}</h2>
+              <h3>${roles[i]}</h3>
+              ID: ${employeeList[i].id}<br>
+              Email: <a href="${employeeList[i].email}">${employeeList[i].email}</a><br>
+              School: ${employeeList[i].school}
+             </div>`;
+             rawHTML += html;
+          }
+    }
+
+    console.log(rawHTML);
+
+    let topHTML = `
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Team Profile Generator</title>
+    </head>
+    
+    <h1>My Team</h1>
+    <div></div>
+    `;
+
+    let bottomHTML = `
+    </body>
+    </html>
+    `;
+
+    //concate all three sections for output
+    let finalHTML = topHTML + rawHTML + bottomHTML;
+
+    //write file
+    fs.writeFile('team-generator.html', finalHTML, (err) => {
+        if (err) throw err;
+        console.log('HTML file generated!');
+      });
+};
 
 
 async function init(){
