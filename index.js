@@ -230,7 +230,6 @@ function generateHTML(){
           }
     }
 
-    console.log(rawHTML);
 
     let topHTML = `
     <!DOCTYPE html>
@@ -255,7 +254,7 @@ function generateHTML(){
     let finalHTML = topHTML + rawHTML + bottomHTML;
 
     //write file
-    fs.writeFile('team-generator.html', finalHTML, (err) => {
+    fs.writeFile('team-generatorEXAMPLE.html', finalHTML, (err) => {
         if (err) throw err;
         console.log('HTML file generated!');
       });
